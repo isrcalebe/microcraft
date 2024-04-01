@@ -1,4 +1,7 @@
+global using static Raylib_cs.Raylib;
 using System;
+using Raylib_cs;
+using microcraft.Game.Platform;
 
 namespace microcraft.Game;
 
@@ -6,8 +9,33 @@ public abstract class GameApplicationBase : IDisposable
 {
     public void Initialise()
     {
-        Console.WriteLine("Hello, world!");
+        InitWindow(GameEnvironment.GAME_WIDTH, GameEnvironment.GAME_HEIGHT, "MICROCRAFT");
+        SetTargetFPS(GameEnvironment.GAME_TARGET_FPS);
+
+        Load();
+
+        while (!WindowShouldClose())
+        {
+            Process();
+
+            BeginDrawing();
+            Draw();
+            EndDrawing();
+        }
     }
+
+    public virtual void Load()
+    {
+    }
+
+    public virtual void Process()
+    {
+    }
+
+    public virtual void Draw()
+    {
+    }
+
 
     #region IDisposable Support
 
@@ -21,6 +49,7 @@ public abstract class GameApplicationBase : IDisposable
             {
             }
 
+            CloseWindow();
             disposedValue = true;
         }
     }
