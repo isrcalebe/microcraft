@@ -1,12 +1,13 @@
 global using static Raylib_cs.Raylib;
 using System;
-using Raylib_cs;
-using microcraft.Game.Platform;
+using microcraft.Game.Timing;
 
 namespace microcraft.Game;
 
 public abstract class GameApplicationBase : IDisposable
 {
+    public IFrameBasedClock Clock = new FramedClock();
+
     public void Initialise()
     {
         InitWindow(GameEnvironment.GAME_WIDTH, GameEnvironment.GAME_HEIGHT, "MICROCRAFT");
