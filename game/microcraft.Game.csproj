@@ -4,12 +4,17 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup Label="Package References">
+    <PackageReference Include="Arch.AOT.SourceGenerator" Version="1.0.1" />
+    <PackageReference Include="Arch.EventBus" Version="1.0.2" />
+    <PackageReference Include="Arch.LowLevel" Version="1.1.0" />
+    <PackageReference Include="Arch.Persistence" Version="1.0.4" />
+    <PackageReference Include="Arch.Relationships" Version="1.0.1" />
+    <PackageReference Include="Arch.System" Version="1.0.5" />
+    <PackageReference Include="Arch.System.SourceGenerator" Version="1.1.4" />
     <PackageReference Include="Raylib-cs" Version="6.0.0" />
+    <PackageReference Include="Silk.NET.Maths" Version="2.20.0" />
   </ItemGroup>
   <ItemGroup Label="Project References">
     <ProjectReference Include="..\resources\microcraft.Game.Resources.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ECS/" />
   </ItemGroup>
 </Project>
