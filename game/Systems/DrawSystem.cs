@@ -2,27 +2,26 @@
 using Arch.Core;
 using Arch.System;
 using microcraft.Game.Components;
-using microcraft.Game.Timing;
 using Raylib_cs;
 using Silk.NET.Maths;
 
 namespace microcraft.Game.Systems;
 
-public partial class DrawSystem : BaseSystem<World, IFrameBasedClock>
+public partial class DrawSystem : BaseSystem<World, float>
 {
     public DrawSystem(World world)
         : base(world)
     {
     }
 
-    public override void BeforeUpdate(in IFrameBasedClock t)
+    public override void BeforeUpdate(in float t)
     {
         base.BeforeUpdate(in t);
 
         BeginDrawing();
     }
 
-    public override void Update(in IFrameBasedClock t)
+    public override void Update(in float t)
     {
         base.Update(in t);
 
@@ -37,7 +36,7 @@ public partial class DrawSystem : BaseSystem<World, IFrameBasedClock>
         DrawTextureEx(sprite.Texture, transform.Position.ToSystem(), transform.Rotation, transform.Scale, sprite.Colour);
     }
 
-    public override void AfterUpdate(in IFrameBasedClock t)
+    public override void AfterUpdate(in float t)
     {
         base.AfterUpdate(in t);
 

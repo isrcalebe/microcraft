@@ -3,7 +3,6 @@ using System;
 using Arch.Core;
 using Arch.System;
 using microcraft.Game.Systems;
-using microcraft.Game.Timing;
 using Schedulers;
 
 namespace microcraft.Game;
@@ -14,11 +13,9 @@ public abstract class GameApplicationBase : IDisposable
 
     protected JobScheduler? Scheduler { get; private set; }
 
-    protected Group<IFrameBasedClock>? Systems { get; private set; }
+    protected Group<float>? Systems { get; private set; }
 
     protected DrawSystem? DrawSystem { get; private set; }
-
-    protected IFrameBasedClock? Clock { get; private set; }
 
     public void Initialise()
     {
@@ -38,11 +35,10 @@ public abstract class GameApplicationBase : IDisposable
                 StrictAllocationMode = false,
             }
         );
-        Systems = new Group<IFrameBasedClock>(
+        Systems = new Group<float>(
             "MICROBLOCKS Systems"
         );
         DrawSystem = new DrawSystem(World);
-        Clock = new FramedClock();
 
         Load();
     }
@@ -54,23 +50,25 @@ public abstract class GameApplicationBase : IDisposable
 
         while (!WindowShouldClose())
         {
-            Process();
-            Draw();
+            var elapsed = GetFrameTime();
+
+            Process(elapsed);
+            Draw(elapsed);
         }
     }
 
-    protected virtual void Process()
+    protected virtual void Process(float elapsedFrameTime)
     {
-        Systems?.BeforeUpdate(Clock!);
-        Systems?.Update(Clock!);
-        Systems?.AfterUpdate(Clock!);
+        Systems?.BeforeUpdate(in elapsedFrameTime);
+        Systems?.Update(in elapsedFrameTime);
+        Systems?.AfterUpdate(in elapsedFrameTime);
     }
 
-    protected virtual void Draw()
+    protected virtual void Draw(float elapsedFrameTime)
     {
-        DrawSystem?.BeforeUpdate(Clock!);
-        DrawSystem?.Update(Clock!);
-        DrawSystem?.AfterUpdate(Clock!);
+        DrawSystem?.BeforeUpdate(in elapsedFrameTime);
+        DrawSystem?.Update(in elapsedFrameTime);
+        DrawSystem?.AfterUpdate(in elapsedFrameTime);
     }
 
     #region IDisposable Support
@@ -90,6 +88,7 @@ public abstract class GameApplicationBase : IDisposable
 
         Scheduler?.Dispose();
         Systems?.Dispose();
+        DrawSystem?.Dispose();
 
         CloseWindow();
         disposedValue = true;
