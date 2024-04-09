@@ -1,9 +1,12 @@
 global using static Raylib_cs.Raylib;
 using System;
+using System.Runtime.InteropServices;
 using Arch.Core;
 using Arch.System;
 using microcraft.Game.Systems;
 using Schedulers;
+using Serilog;
+using Serilog.Core;
 
 namespace microcraft.Game;
 
@@ -17,8 +20,11 @@ public abstract class GameApplicationBase : IDisposable
 
     protected DrawSystem? DrawSystem { get; private set; }
 
+    protected Logger? Logger { get; private set; }
+
     public void Initialise()
     {
+        setupLogging();
         InitWindow(GameEnvironment.GAME_WIDTH, GameEnvironment.GAME_HEIGHT, "MICROCRAFT");
         SetTargetFPS(GameEnvironment.GAME_TARGET_FPS);
 
@@ -70,6 +76,17 @@ public abstract class GameApplicationBase : IDisposable
         DrawSystem?.Update(in elapsedFrameTime);
         DrawSystem?.AfterUpdate(in elapsedFrameTime);
     }
+
+    private void setupLogging()
+    {
+        var loggerConfiguration = new LoggerConfiguration()
+                                  .WriteTo.Console();
+
+        Logger = loggerConfiguration.CreateLogger();
+    }
+
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = true)]
+    private delegate void RaylibTracelogCallback(int level, string message, ArgIterator args);
 
     #region IDisposable Support
 

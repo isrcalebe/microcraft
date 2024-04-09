@@ -26,13 +26,13 @@ public partial class DrawSystem : BaseSystem<World, float>
         base.Update(in t);
 
         ClearBackground(Color.RayWhite);
+        DrawQuery(World);
     }
 
     [Query]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Draw(ref TransformComponent transform, ref SpriteComponent sprite)
     {
-        TraceLog(TraceLogLevel.Debug, $"{sprite.Colour}");
         DrawTextureEx(sprite.Texture, transform.Position.ToSystem(), transform.Rotation, transform.Scale, sprite.Colour);
     }
 
