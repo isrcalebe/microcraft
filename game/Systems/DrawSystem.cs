@@ -9,7 +9,9 @@ namespace microcraft.Game.Systems;
 
 public partial class DrawSystem : BaseSystem<World, float>
 {
-    public DrawSystem(World world)
+    public Camera2D Camera { get; set; }
+
+    public DrawSystem(World world, Camera2D camera)
         : base(world)
     {
     }

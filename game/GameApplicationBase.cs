@@ -1,9 +1,13 @@
 global using static Raylib_cs.Raylib;
 using System;
+using System.Numerics;
 using System.Runtime.InteropServices;
 using Arch.Core;
 using Arch.System;
+using microcraft.Game.IO.Providers;
+using microcraft.Game.Resources;
 using microcraft.Game.Systems;
+using Raylib_cs;
 using Schedulers;
 using Serilog;
 using Serilog.Core;
@@ -22,9 +26,12 @@ public abstract class GameApplicationBase : IDisposable
 
     protected Logger? Logger { get; private set; }
 
+    protected AssetProvider<byte[]>? Assets { get; private set; }
+
     public void Initialise()
     {
         setupLogging();
+        setupAssets();
         InitWindow(GameEnvironment.GAME_WIDTH, GameEnvironment.GAME_HEIGHT, "MICROCRAFT");
         SetTargetFPS(GameEnvironment.GAME_TARGET_FPS);
 
@@ -44,7 +51,15 @@ public abstract class GameApplicationBase : IDisposable
         Systems = new Group<float>(
             "MICROBLOCKS Systems"
         );
-        DrawSystem = new DrawSystem(World);
+        DrawSystem = new DrawSystem(World, new Camera2D
+        {
+            Zoom = 1.0f,
+            Rotation = 0.0f,
+            Target = Vector2.Zero,
+            Offset = new Vector2(
+                GameEnvironment.RENDERER_WIDTH / 2.0f,
+                GameEnvironment.RENDERER_HEIGHT / 2.0f)
+        });
 
         Load();
     }
@@ -75,6 +90,13 @@ public abstract class GameApplicationBase : IDisposable
         DrawSystem?.BeforeUpdate(in elapsedFrameTime);
         DrawSystem?.Update(in elapsedFrameTime);
         DrawSystem?.AfterUpdate(in elapsedFrameTime);
+    }
+
+    private void setupAssets()
+    {
+        Assets = new AssetProvider<byte[]>();
+        Assets.AddNestedProvider(new AssemblyAssetProvider(GameAssetAssemblyProvider.Assembly));
+        Assets.AddExtension(".png");
     }
 
     private void setupLogging()
