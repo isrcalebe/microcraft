@@ -15,7 +15,7 @@ public class AssetProvider<T> : IAssetProvider<T>
     private readonly List<IAssetProvider<T>> providers = new();
     private readonly List<string> searchExtensions = new();
 
-    public IEnumerable<string> AvailableAssets
+    public virtual IEnumerable<string> AvailableAssets
     {
         get
         {

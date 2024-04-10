@@ -5,14 +5,9 @@ namespace microcraft.Game;
 
 public class GameApplication : GameApplicationBase
 {
-    private Image image;
-    private Texture2D texture;
-
     protected override void Load()
     {
-        var tiles = Assets?.Fetch("Textures/tiles.png");
-        image = LoadImageFromMemory(".png", tiles);
-        texture = LoadTextureFromImage(image);
+        using var texture = Textures.Fetch("tiles.png");
 
         World?.Create(
             new TransformComponent
@@ -20,6 +15,7 @@ public class GameApplication : GameApplicationBase
                 X = 256,
                 Y = 256,
                 Scale = 2.0f,
+                Rotation = 45.0f,
             },
             new SpriteComponent()
             {
@@ -28,13 +24,5 @@ public class GameApplication : GameApplicationBase
             });
 
         base.Load();
-    }
-
-    protected override void Dispose(bool disposing)
-    {
-        UnloadTexture(texture);
-        UnloadImage(image);
-
-        base.Dispose(disposing);
     }
 }

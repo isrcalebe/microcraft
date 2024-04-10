@@ -84,6 +84,7 @@ public class AssemblyAssetProvider : IAssetProvider<byte[]>
 
     public void Dispose()
     {
+        GC.SuppressFinalize(this);
     }
 
     #endregion

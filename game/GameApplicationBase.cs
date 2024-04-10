@@ -4,6 +4,7 @@ using System.Numerics;
 using System.Runtime.InteropServices;
 using Arch.Core;
 using Arch.System;
+using microcraft.Game.Graphics.Textures;
 using microcraft.Game.IO.Providers;
 using microcraft.Game.Resources;
 using microcraft.Game.Systems;
@@ -27,6 +28,8 @@ public abstract class GameApplicationBase : IDisposable
     protected Logger? Logger { get; private set; }
 
     protected AssetProvider<byte[]>? Assets { get; private set; }
+
+    protected TextureProvider Textures { get; private set; }
 
     public void Initialise()
     {
@@ -97,6 +100,8 @@ public abstract class GameApplicationBase : IDisposable
         Assets = new AssetProvider<byte[]>();
         Assets.AddNestedProvider(new AssemblyAssetProvider(GameAssetAssemblyProvider.Assembly));
         Assets.AddExtension(".png");
+
+        Textures = new TextureProvider(new NamespacedAssetProvider<byte[]>(Assets, "Textures"));
     }
 
     private void setupLogging()
